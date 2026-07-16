@@ -1,0 +1,326 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Restaurant Inspections API",
+    "description": "REST API for finding restaurants, retrieving restaurant inspection histories, listing recent inspections, and looking up a single inspection. Use this API when a user asks about restaurant inspection scores, grades, dates, details, recent inspections, or a restaurant's inspection history.",
+    "version": "1.0.0"
+  },
+  "host": "http://159.223.151.127/",
+  "basePath": "/fastapi",
+  "schemes": ["http"],
+  "consumes": ["application/json"],
+  "produces": ["application/json"],
+  "paths": {
+    "/restaurants": {
+      "get": {
+        "operationId": "listRestaurants",
+        "summary": "List restaurants",
+        "description": "Returns restaurants. Use this to search by restaurant name, city, or newsroom and to find restaurant records before retrieving their full inspection history.",
+        "parameters": [
+          {
+            "name": "city",
+            "in": "query",
+            "description": "Optional city to filter restaurants, for example Cincinnati.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "newsroom",
+            "in": "query",
+            "description": "Optional newsroom or market label to filter restaurants.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "description": "Optional text search for a restaurant name or partial name.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Maximum number of restaurants to return.",
+            "required": false,
+            "type": "integer",
+            "default": 100,
+            "minimum": 1,
+            "maximum": 500
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of restaurant records.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/RestaurantRead"
+              }
+            }
+          },
+          "500": {
+            "description": "Server error."
+          }
+        }
+      },
+      "post": {
+        "operationId": "createRestaurant",
+        "summary": "Create a restaurant",
+        "description": "Creates a new restaurant record. Use this only when the caller explicitly needs to add a restaurant that does not already exist.",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "description": "Restaurant fields to create.",
+            "schema": {
+              "$ref": "#/definitions/RestaurantCreate"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The created restaurant record.",
+            "schema": {
+              "$ref": "#/definitions/RestaurantRead"
+            }
+          },
+          "400": {
+            "description": "Invalid request."
+          },
+          "500": {
+            "description": "Server error."
+          }
+        }
+      }
+    },
+    "/restaurants/{restaurant_id}": {
+      "get": {
+        "operationId": "getRestaurantWithInspections",
+        "summary": "Get restaurant with inspections",
+        "description": "Returns one restaurant and its nested inspection history. Use this when a user asks for all inspections or the inspection history of a specific restaurant.",
+        "parameters": [
+          {
+            "name": "restaurant_id",
+            "in": "path",
+            "description": "Unique numeric restaurant identifier.",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A restaurant with its inspections.",
+            "schema": {
+              "$ref": "#/definitions/RestaurantReadWithInspections"
+            }
+          },
+          "404": {
+            "description": "Restaurant not found."
+          },
+          "500": {
+            "description": "Server error."
+          }
+        }
+      }
+    },
+    "/inspections": {
+      "get": {
+        "operationId": "listInspections",
+        "summary": "List inspections",
+        "description": "Returns inspections. Use this to search by restaurant ID, grade, or to retrieve recent inspection records for analysis and reporting.",
+        "parameters": [
+          {
+            "name": "restaurant_id",
+            "in": "query",
+            "description": "Optional numeric restaurant identifier to limit results to one restaurant.",
+            "required": false,
+            "type": "integer"
+          },
+          {
+            "name": "grade",
+            "in": "query",
+            "description": "Optional inspection grade filter, for example A, B, C, Pass, or Fail depending on the source system.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Maximum number of inspections to return.",
+            "required": false,
+            "type": "integer",
+            "default": 100,
+            "minimum": 1,
+            "maximum": 500
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of inspection records.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/InspectionRead"
+              }
+            }
+          },
+          "500": {
+            "description": "Server error."
+          }
+        }
+      },
+      "post": {
+        "operationId": "createInspection",
+        "summary": "Create an inspection",
+        "description": "Creates a new inspection record tied to an existing restaurant. Use this only when the caller explicitly needs to add a new inspection entry.",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "description": "Inspection fields to create.",
+            "schema": {
+              "$ref": "#/definitions/InspectionCreate"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The created inspection record.",
+            "schema": {
+              "$ref": "#/definitions/InspectionRead"
+            }
+          },
+          "400": {
+            "description": "Invalid request, including a restaurantId that does not exist."
+          },
+          "500": {
+            "description": "Server error."
+          }
+        }
+      }
+    },
+    "/inspections/{inspection_id}": {
+      "get": {
+        "operationId": "getInspectionWithRestaurant",
+        "summary": "Get inspection with restaurant",
+        "description": "Returns one inspection and its parent restaurant. Use this when a user asks for details about a specific inspection record.",
+        "parameters": [
+          {
+            "name": "inspection_id",
+            "in": "path",
+            "description": "Unique numeric inspection identifier.",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "An inspection with its restaurant.",
+            "schema": {
+              "$ref": "#/definitions/InspectionReadWithRestaurant"
+            }
+          },
+          "404": {
+            "description": "Inspection not found."
+          },
+          "500": {
+            "description": "Server error."
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "RestaurantCreate": {
+      "type": "object",
+      "required": ["name", "address", "city", "state"],
+      "properties": {
+        "name": { "type": "string", "description": "Restaurant name." },
+        "address": { "type": "string", "description": "Street address." },
+        "city": { "type": "string", "description": "City name." },
+        "state": { "type": "string", "description": "Two-letter state or jurisdiction abbreviation." },
+        "county": { "type": "string", "description": "County name." },
+        "newsroom": { "type": "string", "description": "Newsroom or market label." },
+        "lastInspected": { "type": "string", "format": "date", "description": "Date of the most recent known inspection." },
+        "lastInspectionId": { "type": "integer", "description": "Identifier of the most recent known inspection." },
+        "lastUpdated": { "type": "string", "format": "date-time", "description": "Timestamp when the restaurant record was last refreshed." },
+        "yelpReviewsCount": { "type": "integer", "description": "Number of Yelp reviews, if collected." },
+        "yelpCuisine": { "type": "string", "description": "Cuisine category from Yelp or another source, if collected." },
+        "priorCoverage": { "type": "string", "description": "Prior newsroom coverage notes or URLs." }
+      }
+    },
+    "RestaurantRead": {
+      "type": "object",
+      "required": ["id", "name", "address", "city", "state"],
+      "properties": {
+        "id": { "type": "integer", "description": "Unique restaurant identifier." },
+        "name": { "type": "string", "description": "Restaurant name." },
+        "address": { "type": "string", "description": "Street address." },
+        "city": { "type": "string", "description": "City name." },
+        "state": { "type": "string", "description": "Two-letter state or jurisdiction abbreviation." },
+        "county": { "type": "string", "description": "County name." },
+        "newsroom": { "type": "string", "description": "Newsroom or market label." },
+        "lastInspected": { "type": "string", "format": "date", "description": "Date of the most recent known inspection." },
+        "lastInspectionId": { "type": "integer", "description": "Identifier of the most recent known inspection." },
+        "lastUpdated": { "type": "string", "format": "date-time", "description": "Timestamp when the restaurant record was last refreshed." },
+        "yelpReviewsCount": { "type": "integer", "description": "Number of Yelp reviews, if collected." },
+        "yelpCuisine": { "type": "string", "description": "Cuisine category from Yelp or another source, if collected." },
+        "priorCoverage": { "type": "string", "description": "Prior newsroom coverage notes or URLs." }
+      }
+    },
+    "InspectionCreate": {
+      "type": "object",
+      "required": ["restaurantId", "date"],
+      "properties": {
+        "restaurantId": { "type": "integer", "description": "Parent restaurant identifier." },
+        "score": { "type": "string", "description": "Inspection score as published by the source system." },
+        "grade": { "type": "string", "description": "Inspection grade or result label." },
+        "date": { "type": "string", "format": "date", "description": "Inspection date." },
+        "details": { "type": "string", "description": "Narrative details, violations, or notes from the inspection." }
+      }
+    },
+    "InspectionRead": {
+      "type": "object",
+      "required": ["id", "restaurantId", "date"],
+      "properties": {
+        "id": { "type": "integer", "description": "Unique inspection identifier." },
+        "restaurantId": { "type": "integer", "description": "Parent restaurant identifier." },
+        "score": { "type": "string", "description": "Inspection score as published by the source system." },
+        "grade": { "type": "string", "description": "Inspection grade or result label." },
+        "date": { "type": "string", "format": "date", "description": "Inspection date." },
+        "details": { "type": "string", "description": "Narrative details, violations, or notes from the inspection." }
+      }
+    },
+    "RestaurantReadWithInspections": {
+      "allOf": [
+        { "$ref": "#/definitions/RestaurantRead" },
+        {
+          "type": "object",
+          "properties": {
+            "inspections": {
+              "type": "array",
+              "description": "Inspection history for the restaurant.",
+              "items": { "$ref": "#/definitions/InspectionRead" }
+            }
+          }
+        }
+      ]
+    },
+    "InspectionReadWithRestaurant": {
+      "allOf": [
+        { "$ref": "#/definitions/InspectionRead" },
+        {
+          "type": "object",
+          "properties": {
+            "restaurant": {
+              "$ref": "#/definitions/RestaurantRead"
+            }
+          }
+        }
+      ]
+    }
+  }
+}
