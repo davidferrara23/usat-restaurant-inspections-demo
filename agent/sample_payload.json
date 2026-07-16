@@ -1,38 +1,25 @@
 {
-  "event_type": "restaurant_inspection_tip_request",
-  "event_version": "1.0",
   "event_id": "evt_20260716_001",
   "triggered_at": "2026-07-16T12:57:00-04:00",
-  "source_system": "restaurant-inspection-workflow",
-  "environment": "production",
   "assignment": {
     "market": "Cincinnati",
     "state": "OH",
     "target_reporters": [
       {
         "name": "David Ferrara",
-        "email": "dferrara@example.com",
-        "beat": "breaking news"
+        "email": "dferrara@example.com"
       }
-    ],
-    "priority": "high"
+    ]
   },
   "inspection": {
     "inspection_id": "OH-HAM-2026-0716-44521",
-    "facility_id": "fac_884231",
-    "permit_id": "permit_551902",
     "establishment_name": "Example Bistro",
-    "owner_operator": "Example Hospitality LLC",
     "address": {
       "street": "123 Main St",
       "city": "Cincinnati",
       "county": "Hamilton",
       "state": "OH",
       "zip": "45202"
-    },
-    "geo": {
-      "latitude": 39.1031,
-      "longitude": -84.5120
     },
     "inspection_date": "2026-07-15",
     "inspection_type": "Complaint",
@@ -43,14 +30,12 @@
     "summary": "Complaint inspection documented multiple critical violations including temperature control issues and evidence of pest activity.",
     "violations": [
       {
-        "code": "3717-1-03.4(F)(1)",
         "title": "Time/temperature controlled food not properly held",
         "severity": "critical",
         "corrected_on_site": false,
         "description": "Cold-held foods measured above safe temperature thresholds."
       },
       {
-        "code": "3717-1-06.4(K)",
         "title": "Presence of pests",
         "severity": "critical",
         "corrected_on_site": false,
@@ -65,47 +50,7 @@
       }
     ]
   },
-  "scoring": {
-    "index_score": 4,
-    "threshold": 3,
-    "passed_threshold": true,
-    "drivers": {
-      "high_review_volume": {
-        "points": 1,
-        "establishment_review_count": 842,
-        "area_average_review_count": 193
-      },
-      "prior_coverage_mentions": {
-        "points": 1,
-        "mention_count": 9,
-        "area_average_mention_count": 2
-      },
-      "prior_coverage_sentiment": {
-        "points": 1,
-        "label": "overly positive",
-        "confidence": 0.81
-      },
-      "complaint_or_violation_severity": {
-        "points": 1,
-        "label": "severe",
-        "confidence": 0.93
-      }
-    }
-  },
   "context": {
-    "business_profile": {
-      "review_count": 842,
-      "average_rating": 4.6,
-      "platforms": [
-        "Yelp",
-        "Google"
-      ],
-      "price_tier": "$$",
-      "categories": [
-        "American",
-        "Brunch"
-      ]
-    },
     "prior_coverage": [
       {
         "headline": "Why Example Bistro became one of downtown Cincinnati's hottest brunch spots",
@@ -121,22 +66,6 @@
         "url": "https://example.com/story2",
         "sentiment": "positive"
       }
-    ],
-    "pattern_flags": [
-      "high-profile establishment",
-      "contrast with prior positive coverage"
     ]
-  },
-  "output_preferences": {
-    "format": "markdown",
-    "include_5ws": true,
-    "include_reporting_steps": true,
-    "include_source_check": true,
-    "max_words": 250
-  },
-  "routing": {
-    "send_email": true,
-    "create_presto_asset": true,
-    "store_tip_sheet": true
   }
 }
