@@ -5,7 +5,7 @@
     "description": "REST API for finding restaurants, retrieving restaurant inspection histories, listing recent inspections, and looking up a single inspection. Use this API when a user asks about restaurant inspection scores, grades, dates, details, recent inspections, or a restaurant's inspection history.",
     "version": "1.0.0"
   },
-  "host": "http://159.223.151.127/",
+  "host": "159.223.151.127",
   "basePath": "/fastapi",
   "schemes": ["http"],
   "consumes": ["application/json"],
