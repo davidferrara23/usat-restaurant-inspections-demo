@@ -1,6 +1,4 @@
 # models.py
-from __future__ import annotations
-
 from datetime import date
 from datetime import date as date_type, datetime
 from typing import Optional
