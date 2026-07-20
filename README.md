@@ -1,4 +1,12 @@
-# Restaurant inspections
+# Restaurant inspections demo
+
+This demo uses the following workflow to scrape restaurant inspections from the [South Carolina Department of Health](https://apps.dhec.sc.gov/Environment/FoodGrades/) and the [Northern Kentucky Health Department](https://nkyhealth.org/foodinspections/) websites. 
+
+All inspections are populated into a shared database. 
+
+When new inspections are retrived by the scraper, the tool determines whether they are newsworthy based upon an index of several factors. 
+
+If the inspection is newsworthy, it is sent to a Copilot agent to be parsed into a tip sheet for a reporter.
 
 ## Workflow
 
